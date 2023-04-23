@@ -17,6 +17,7 @@ function delElement() {
   mainDisplay.remove();
 }
 
+// Functions and events for mouse click controls--
 // Display functions-
 function displayMain(e) {
   if (mainDisplay.innerText == "ERROR") {
@@ -58,7 +59,6 @@ function calc(e) {
         secDisplay.innerText = mainDisplay.innerText.slice(0, -1);
         mainDisplay.innerText = `${result}`;
       }
-      console.log(e.target);
     }
     if (y == "-" && prob.includes(y)) {
       newArr = prob.split(y)
@@ -73,7 +73,6 @@ function calc(e) {
         secDisplay.innerText = mainDisplay.innerText.slice(0, -1);
         mainDisplay.innerText = `${result}`;
       }
-      console.log(e.target);
     }
     if (y == "×" && prob.includes(y)) {
       newArr = prob.split(y)
@@ -105,7 +104,6 @@ function calc(e) {
           secDisplay.innerText = mainDisplay.innerText.slice(0, -1);
           mainDisplay.innerText = `${result}`;
         }
-        console.log(e.target);
       } 
     }
   }
@@ -246,6 +244,182 @@ buttonEqual = document.getElementById("equal");
 buttonEqual.onclick = (e) => {
   equalTo(e);
 }
+// End of Functions and events for mouse click controls--
+
+
+// Functions and events for keyboard controls--
+// Display Keyboard function-
+function keyboardDisplayMain(e) {
+  let numArr = ["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-", "*", "/", "=", "."]
+  if (mainDisplay.innerText == "ERROR") {
+    void(0);
+  } else if (numArr.indexOf(e.key) != -1) {
+      if((mainDisplay.innerText.length == 1) && (mainDisplay.innerText == 0)) {
+        if (e.key == "+" ||
+            e.key == "-" ||
+            e.key == "*" ||
+            e.key == "/") {
+          mainDisplay.innerText = "0";
+        } else {
+          mainDisplay.innerText = "";
+        }
+      }
+      if (e.key == "*") {
+        mainDisplay.innerText = `${mainDisplay.innerText+"×"}`;
+      } else if(e.key == "/") {
+        mainDisplay.innerText = `${mainDisplay.innerText+"÷"}`;
+      } else {
+        mainDisplay.innerText = `${mainDisplay.innerText+e.key}`;
+      }
+  }
+}
+
+//Keyboard Calculating functions-
+function keyboardCalc(e) {
+  let prob = mainDisplay.innerText;
+  arth = ["+", "-", "×", "÷"]
+  let n1;
+  let n2;
+  let result;
+  keyboardDisplayMain(e);
+  for (y of arth) {
+    if (y == "+" && prob.includes(y)) {
+      newArr = prob.split(y)
+      n1 = parseFloat(newArr[0]);
+      n2 = parseFloat(newArr[1]);
+      result = n1 + n2;
+      result = result.toString();
+      if (e.key == "=" || e.key == "Enter") {
+        secDisplay.innerText = mainDisplay.innerText;
+        mainDisplay.innerText = `${result}`;
+      } else {
+        secDisplay.innerText = mainDisplay.innerText.slice(0, -1);
+        mainDisplay.innerText = `${result+e.key}`;
+      }
+    }
+    if (y == "-" && prob.includes(y)) {
+      newArr = prob.split(y)
+      n1 = parseFloat(newArr[0]);
+      n2 = parseFloat(newArr[1]);
+      result = n1 - n2;
+      result = result.toString();
+      if (e.key == "=" || e.key == "Enter") {
+        secDisplay.innerText = mainDisplay.innerText;
+        mainDisplay.innerText = `${result}`;
+      } else {
+        secDisplay.innerText = mainDisplay.innerText.slice(0, -1);
+        mainDisplay.innerText = `${result+e.key}`;
+      }
+    }
+    if (y == "×" && prob.includes(y)) {
+      newArr = prob.split(y)
+      n1 = parseFloat(newArr[0]);
+      n2 = parseFloat(newArr[1]);
+      result = n1 * n2;
+      result = result.toString();
+      if (e.key == "=" || e.key == "Enter") {
+        secDisplay.innerText = mainDisplay.innerText;
+        mainDisplay.innerText = `${result}`;
+      } else {
+        secDisplay.innerText = mainDisplay.innerText.slice(0, -1);
+        mainDisplay.innerText = `${result+y}`;
+      }
+    }
+    if (y == "÷" && prob.includes(y)) {
+      newArr = prob.split(y)
+      n1 = parseFloat(newArr[0]);
+      n2 = parseFloat(newArr[1]);
+      if (n2 == 0) {
+        mainDisplay.innerText = "ERROR";
+      } else {
+        result = n1 / n2;
+        result = result.toString();
+        if (e.key == "=" || e.key == "Enter") {
+          secDisplay.innerText = mainDisplay.innerText;
+          mainDisplay.innerText = `${result}`;
+        } else {
+          secDisplay.innerText = mainDisplay.innerText.slice(0, -1);
+          mainDisplay.innerText = `${result+y}`;
+        }
+      } 
+    }
+  }
+}
+
+function keyboardCorr(e) {
+  if ((e.key == "+" ||
+       e.key == "-" ||
+       e.key == "*" ||
+       e.key == "/") && 
+       (mainDisplay.innerText.at(-1) == "+" ||
+        mainDisplay.innerText.at(-1) == "-" ||
+        mainDisplay.innerText.at(-1) == "×" ||
+        mainDisplay.innerText.at(-1) == "÷")) {
+          let arrStr = mainDisplay.innerText.split("");
+          if (e.key == "*") {
+            arrStr[arrStr.length - 1] = "×";
+            mainDisplay.innerText = arrStr.join("");
+          } else if(e.key == "/") {
+            arrStr[arrStr.length - 1] = "÷";
+            mainDisplay.innerText = arrStr.join("");
+          } else {
+            arrStr[arrStr.length - 1] = e.key;
+            mainDisplay.innerText = arrStr.join("");
+          }
+        } else {
+          keyboardCalc(e);
+        }
+}
+
+// Keyboard Dot Function-
+function keyboardDot(e) {
+  if (mainDisplay.innerText.includes(".")) {
+    void(0);
+  } else {
+    keyboardDisplayMain(e);
+  }
+}
+
+// keyboard Equal Function-
+function keyboardEqualTo(e) {
+  if (mainDisplay.innerText.includes("=")) {
+    mainDisplay.innerText = "ERROR";
+  } else {
+    keyboardCalc(e);
+  }
+}
+
+// Keyboard Functionality-
+document.onkeydown = (e) => {
+  if (e.key == "Backspace") {
+    if (mainDisplay.innerText == "ERROR") {
+      delElement();
+      createElement();
+    } else {
+      if (mainDisplay.innerText.length <= 1) {
+        mainDisplay.innerText = 0;
+      } else {
+        mainDisplay.innerText = mainDisplay.innerText.slice(0, -1);
+      }
+    }
+  } else if (e.key == "Delete") {
+      delElement();
+      createElement();
+  } else if (e.key == "+" ||
+             e.key == "-" ||
+             e.key == "*" ||
+             e.key == "/") {
+              keyboardCorr(e);
+  } else if (e.key == ".") {
+      keyboardDot(e);
+  } else if (e.key == "=" || e.key == "Enter") {
+      keyboardEqualTo(e);
+  } else {
+      console.log(e.key);
+      keyboardDisplayMain(e);
+  }
+}
+// End of Functions and events for keyboard controls--
 
 window.onload = () => {
   createElement();
